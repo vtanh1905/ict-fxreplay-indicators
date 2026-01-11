@@ -102,7 +102,7 @@ onTick = (length, _moment, _, ta, inputs) => {
     }
 
     // --- MACRO TWO LOGIC (10:45 - 11:15) ---
-    if (dayOffsetMinutes >= macroTwo.startTime && dayOffsetMinutes < macroTwo.endTime) {
+    if (dayOffsetMinutes >= macroTwo.startTime && dayOffsetMinutes <= macroTwo.endTime) {
         macroTwo.highs.push(high(0));
         macroTwo.lows.push(low(0));
         macroTwo.times.push(time(0));
@@ -123,7 +123,7 @@ onTick = (length, _moment, _, ta, inputs) => {
     }
 
     // --- MARKET OPEN LOGIC (9:30 - 9:33) ---
-    if (dayOffsetMinutes >= marketOpen.startTime && dayOffsetMinutes < marketOpen.endTime) {
+    if (dayOffsetMinutes >= marketOpen.startTime && dayOffsetMinutes <= marketOpen.endTime) {
         marketOpen.highs.push(high(0));
         marketOpen.lows.push(low(0));
         marketOpen.times.push(time(0));
@@ -144,7 +144,7 @@ onTick = (length, _moment, _, ta, inputs) => {
     }
 
     // --- MACRO 10:30 LOGIC (10:27 - 10:33) ---
-    if (dayOffsetMinutes >= macroTenThirty.startTime && dayOffsetMinutes < macroTenThirty.endTime) {
+    if (dayOffsetMinutes >= macroTenThirty.startTime && dayOffsetMinutes <= macroTenThirty.endTime) {
         macroTenThirty.highs.push(high(0));
         macroTenThirty.lows.push(low(0));
         macroTenThirty.times.push(time(0));
@@ -165,7 +165,7 @@ onTick = (length, _moment, _, ta, inputs) => {
     }
 
     // --- MACRO 11:30 LOGIC (11:27 - 11:33) ---
-    if (dayOffsetMinutes >= macroElevenThirty.startTime && dayOffsetMinutes < macroElevenThirty.endTime) {
+    if (dayOffsetMinutes >= macroElevenThirty.startTime && dayOffsetMinutes <= macroElevenThirty.endTime) {
         macroElevenThirty.highs.push(high(0));
         macroElevenThirty.lows.push(low(0));
         macroElevenThirty.times.push(time(0));
