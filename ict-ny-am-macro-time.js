@@ -28,7 +28,7 @@ const SEVEN_MINUTES_IN_SECONDS = ONE_MINUTE_IN_SECONDS * 7;
 const THIRTY_MINUTES_IN_SECONDS = ONE_MINUTE_IN_SECONDS * 30;
 
 // Price offset to provide a buffer around high/low levels
-const PRICE_OFFSET = 1;
+const PRICE_OFFSET = 3;
 
 /*
 ==============
@@ -76,6 +76,12 @@ const macroElevenThirty = {
 };
 
 onTick = (length, _moment, _, ta, inputs) => {
+    // Only turn on  the Indicator for M1 or below M1
+    const chartTimeframe = time(0) - time(1);
+    if (chartTimeframe > 60) {
+        return;
+    }
+
     const timezoneOffset = convertTimezoneStr(inputs.timezoneStr);
     const dayOffsetMinutes = getDayOffsetMinutes(time(0), timezoneOffset);
 
