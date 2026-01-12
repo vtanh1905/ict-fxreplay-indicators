@@ -1,13 +1,19 @@
-//@version=1
-init = () => {
-    // Dropdown input for timezome
-    input.str(
-        'Timezone',
-        'UTC-4',
-        'timezoneStr',
-        ['UTC-4', 'UTC-5']
-    );
+//@version=1.3
 
+/**
+ * ========================================
+ * ICT NY AM Macro Levels
+ * ========================================
+ * 
+ * @author      Vu Tuan Anh
+ * @email       vtanh1905@gmail.com
+ * @discord    vtanh1905
+ * @created     2026-01-11
+ * @updated     2026-01-12
+ * ========================================
+ */
+
+init = () => {
     //Pick a line color
     input.color(
         'Line Color',
@@ -82,7 +88,7 @@ onTick = (length, _moment, _, ta, inputs) => {
         return;
     }
 
-    const timezoneOffset = convertTimezoneStr(inputs.timezoneStr);
+    const timezoneOffset = getNewYorkTimezoneOffset(time(0), _moment);
     const dayOffsetMinutes = getDayOffsetMinutes(time(0), timezoneOffset);
 
     // --- MACRO ONE LOGIC (9:45 - 10:15) ---
@@ -94,7 +100,7 @@ onTick = (length, _moment, _, ta, inputs) => {
         const anchor = macroOne.times.at(0);
         const max = Math.max(...macroOne.highs) + PRICE_OFFSET;
         const min = Math.min(...macroOne.lows) - PRICE_OFFSET;
-        
+
         // Dynamic duration based on macro window
         const durationTime = (macroOne.endTime - macroOne.startTime) * ONE_MINUTE_IN_SECONDS;
 
@@ -116,7 +122,7 @@ onTick = (length, _moment, _, ta, inputs) => {
         const anchor = macroTwo.times.at(0);
         const max = Math.max(...macroTwo.highs) + PRICE_OFFSET;
         const min = Math.min(...macroTwo.lows) - PRICE_OFFSET;
-        
+
         const durationTime = (macroTwo.endTime - macroTwo.startTime) * ONE_MINUTE_IN_SECONDS;
 
         const hId = rayLine(newPoint(anchor, max), newPoint(anchor + durationTime, max), { linewidth: 2, linecolor: inputs.lineColor, textcolor: inputs.lineColor, showLabel: true, extendRight: false }, macroTwo.label);
@@ -137,7 +143,7 @@ onTick = (length, _moment, _, ta, inputs) => {
         const anchor = marketOpen.times.at(0);
         const max = Math.max(...marketOpen.highs) + PRICE_OFFSET;
         const min = Math.min(...marketOpen.lows) - PRICE_OFFSET;
-        
+
         const durationTime = (marketOpen.endTime - marketOpen.startTime) * ONE_MINUTE_IN_SECONDS;
 
         const hId = rayLine(newPoint(anchor, max), newPoint(anchor + durationTime, max), { linewidth: 2, linecolor: inputs.lineColor, textcolor: inputs.lineColor, showLabel: true, extendRight: false }, marketOpen.label);
@@ -158,7 +164,7 @@ onTick = (length, _moment, _, ta, inputs) => {
         const anchor = macroTenThirty.times.at(0);
         const max = Math.max(...macroTenThirty.highs) + PRICE_OFFSET;
         const min = Math.min(...macroTenThirty.lows) - PRICE_OFFSET;
-        
+
         const durationTime = (macroTenThirty.endTime - macroTenThirty.startTime) * ONE_MINUTE_IN_SECONDS;
 
         const hId = rayLine(newPoint(anchor, max), newPoint(anchor + durationTime, max), { linewidth: 2, linecolor: inputs.lineColor, textcolor: inputs.lineColor, showLabel: true, extendRight: false }, macroTenThirty.label);
@@ -179,7 +185,7 @@ onTick = (length, _moment, _, ta, inputs) => {
         const anchor = macroElevenThirty.times.at(0);
         const max = Math.max(...macroElevenThirty.highs) + PRICE_OFFSET;
         const min = Math.min(...macroElevenThirty.lows) - PRICE_OFFSET;
-        
+
         const durationTime = (macroElevenThirty.endTime - macroElevenThirty.startTime) * ONE_MINUTE_IN_SECONDS;
 
         const hId = rayLine(newPoint(anchor, max), newPoint(anchor + durationTime, max), { linewidth: 2, linecolor: inputs.lineColor, textcolor: inputs.lineColor, showLabel: true, extendRight: false }, macroElevenThirty.label);
@@ -221,12 +227,11 @@ const getDayOffsetMinutes = (timestamp, timezoneOffset = -4) => {
 };
 
 /**
- * Extracts the numerical offset from a UTC string (e.g., "UTC-5" -> -5)
- * @param {string} timezoneStr 
- * @returns {number}
+ * Get the UTC offset for New York timezone at a given Unix timestamp
+ * @param {number} unixTimestampInSeconds - Unix timestamp in seconds
+ * @param {moment.Moment} _moment - moment-timezone instance
+ * @returns {number} UTC offset in hours (-4 for EDT in summer, -5 for EST in winter)
  */
-const convertTimezoneStr = (timezoneStr) => {
-    const match = timezoneStr.match(/[+-]?\d+/);
-
-    return match ? parseInt(match[0], 10) : 0;
-};
+function getNewYorkTimezoneOffset(unixTimestampInSeconds, _moment) {
+  return _moment.unix(unixTimestampInSeconds).tz('America/New_York').utcOffset() / 60;
+}
